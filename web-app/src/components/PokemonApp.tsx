@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Pokemon } from 'shared';
 
 import { fetchPokemons } from '../api';
 import { useBattle } from '../hooks/useBattle';
 import { usePokemonFilters } from '../hooks/usePokemonFilters';
 import { usePokemonSelection } from '../hooks/usePokemonSelection';
-import BattleDialog from './BattleDialog';
+import { BattleDialog } from './BattleDialog';
 import { Header } from './Header';
-import PokemonFilters from './PokemonFilters';
-import PokemonList from './PokemonList';
-import PokemonSelection from './PokemonSelection';
+import { PokemonFilters } from './PokemonFilters';
+import { PokemonList } from './PokemonList';
+import { PokemonSelection } from './PokemonSelection';
 
-const PokemonApp: React.FC = () => {
+export function PokemonApp() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const filters = usePokemonFilters(pokemons);
   const { selection, isSelected, isFull, toggle } = usePokemonSelection();
@@ -43,6 +43,4 @@ const PokemonApp: React.FC = () => {
       {battle && <BattleDialog battle={battle} onClose={stopBattle} />}
     </div>
   );
-};
-
-export default PokemonApp;
+}

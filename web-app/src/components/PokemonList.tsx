@@ -1,7 +1,6 @@
-import React from 'react';
 import type { Pokemon } from 'shared';
 
-import Card from './Card';
+import { Card } from './Card';
 
 type PokemonListProps = {
   pokemons: Pokemon[];
@@ -10,7 +9,7 @@ type PokemonListProps = {
   onToggle: (pokemon: Pokemon) => void;
 };
 
-const PokemonList: React.FC<PokemonListProps> = ({ pokemons, isSelected, isFull, onToggle }) => {
+export function PokemonList({ pokemons, isSelected, isFull, onToggle }: PokemonListProps) {
   if (pokemons.length === 0) {
     return (
       <div className="flex items-center">
@@ -32,6 +31,4 @@ const PokemonList: React.FC<PokemonListProps> = ({ pokemons, isSelected, isFull,
       ))}
     </div>
   );
-};
-
-export default PokemonList;
+}

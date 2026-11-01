@@ -1,5 +1,5 @@
-import PokemonApp from './components/PokemonApp';
+import { PokemonApp } from './components/PokemonApp';
 
-export default function App() {
+export function App() {
   return <PokemonApp />;
 }

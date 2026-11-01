@@ -1,7 +1,6 @@
-import React from 'react';
 import { IoIosMoon, IoIosSunny } from 'react-icons/io';
 
-const ThemeSwitcher: React.FC = () => {
+export function ThemeSwitcher() {
   return (
     <button
       onClick={() => document.documentElement.classList.toggle('dark')}
@@ -15,6 +14,4 @@ const ThemeSwitcher: React.FC = () => {
       </div>
     </button>
   );
-};
-
-export default ThemeSwitcher;
+}

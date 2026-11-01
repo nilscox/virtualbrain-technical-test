@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import Markdown from 'react-markdown';
 
 import type { Battle } from '../hooks/useBattle';
@@ -9,7 +9,7 @@ type BattleDialogProps = {
   onClose: () => void;
 };
 
-const BattleDialog: React.FC<BattleDialogProps> = ({ battle, onClose }) => {
+export function BattleDialog({ battle, onClose }: BattleDialogProps) {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -65,6 +65,4 @@ const BattleDialog: React.FC<BattleDialogProps> = ({ battle, onClose }) => {
       </div>
     </dialog>
   );
-};
-
-export default BattleDialog;
+}

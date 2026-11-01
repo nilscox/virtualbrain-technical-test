@@ -1,14 +1,12 @@
-import React from 'react';
-
 import { usePokemonFilters } from '../hooks/usePokemonFilters';
 
-const PokemonFilters: React.FC<ReturnType<typeof usePokemonFilters>> = ({
+export function PokemonFilters({
   types,
   search,
   setSearch,
   selectedTypes,
   toggleType,
-}) => {
+}: ReturnType<typeof usePokemonFilters>) {
   return (
     <div className="flex w-full max-w-4xl flex-col items-center gap-4 p-4">
       <input
@@ -35,6 +33,4 @@ const PokemonFilters: React.FC<ReturnType<typeof usePokemonFilters>> = ({
       </div>
     </div>
   );
-};
-
-export default PokemonFilters;
+}

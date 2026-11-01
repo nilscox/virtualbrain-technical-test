@@ -5,14 +5,14 @@ type CardProps = {
   pokemon: Pokemon;
 };
 
-export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
+export function MiniCard({ pokemon }: CardProps) {
   return (
     <div className="flex h-10 items-center rounded-2xl bg-amber-300 p-2 text-black">
       <img src={pokemon.image} alt={pokemon.name} style={{ height: '100%' }} />
       <div className="ml-2 text-center">{pokemon.name}</div>
     </div>
   );
-};
+}
 
 type SelectableCardProps = CardProps & {
   selected: boolean;
@@ -20,7 +20,7 @@ type SelectableCardProps = CardProps & {
   onToggle: (pokemon: Pokemon) => void;
 };
 
-const Card: React.FC<SelectableCardProps> = memo(({ pokemon, selected, disabled, onToggle }) => {
+export const Card = memo(function Card({ pokemon, selected, disabled, onToggle }: SelectableCardProps) {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
 
   const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -83,5 +83,3 @@ const Card: React.FC<SelectableCardProps> = memo(({ pokemon, selected, disabled,
     </button>
   );
 });
-
-export default Card;

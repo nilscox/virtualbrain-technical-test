@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import type { Pokemon } from 'shared';
 
 import { MiniCard } from './Card';
@@ -9,7 +9,7 @@ type PokemonSelectionProps = {
   onFight: () => void;
 };
 
-const PokemonSelection: React.FC<PokemonSelectionProps> = ({ selection, onUnselect, onFight }) => {
+export function PokemonSelection({ selection, onUnselect, onFight }: PokemonSelectionProps) {
   if (selection.length === 0) {
     return null;
   }
@@ -35,6 +35,4 @@ const PokemonSelection: React.FC<PokemonSelectionProps> = ({ selection, onUnsele
       </button>
     </div>
   );
-};
-
-export default PokemonSelection;
+}
