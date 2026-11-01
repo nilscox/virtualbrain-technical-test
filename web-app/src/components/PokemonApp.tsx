@@ -31,7 +31,7 @@ const PokemonApp: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-amber-50 dark:bg-slate-800">
+    <div className="flex min-h-screen flex-col items-center bg-amber-50 dark:bg-slate-800">
       <Header />
       <PokemonFilters {...filters} />
       <PokemonList pokemons={filters.filteredPokemons} />
