@@ -1,5 +1,8 @@
 import { type Request, type Response, Router } from 'express';
 
+import { CACHE } from '../services/cache.ts';
+import { pokemonToMarkdown } from '../services/markdown.ts';
+
 const ContentController = Router();
 
 /**
@@ -13,12 +16,21 @@ ContentController.get('/all', async (_req: Request, res: Response) => {
 
 /**
  * Return a pokemon as markdown
- * @route GET /contents/:id
+ * @route GET /contents/:pokemonId
  * @group Contents
- * @param {string} id.path.required - Pokemon ID
+ * @param {string} pokemonId.path.required - Pokemon ID
  */
-ContentController.get('/:pokemonId', async (_req: Request, res: Response) => {
-  return res.sendStatus(200);
+ContentController.get('/:pokemonId', (req: Request<{ pokemonId: string }>, res: Response) => {
+  const pokemon = CACHE.find(({ id }) => id === Number(req.params.pokemonId));
+
+  if (!pokemon) {
+    return res.sendStatus(404);
+  }
+
+  res.attachment(`${pokemon.name}.md`);
+  res.type('text/markdown');
+
+  return res.status(200).send(pokemonToMarkdown(pokemon));
 });
 
 export { ContentController };
