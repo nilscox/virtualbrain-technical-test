@@ -9,16 +9,24 @@ import { fetchAllPokemons } from './pokeapi.ts';
 const CACHE_PATH = join(import.meta.dirname, '../../cache.json');
 
 /**
- * All pokemons, loaded at startup by `loadCache`
+ * All pokemons by id, loaded at startup by `loadCache`
  */
-export const CACHE: Pokemon[] = [];
+const CACHE: Record<number, Pokemon> = {};
+
+export function listPokemons(): Pokemon[] {
+  return Object.values(CACHE);
+}
+
+export function findPokemon(pokemonId: number): Pokemon | undefined {
+  return CACHE[pokemonId];
+}
 
 /**
  * Populate the cache from the cache file, creating it from PokeAPI when it does not exist
  */
 export async function loadCache(): Promise<void> {
   if (existsSync(CACHE_PATH)) {
-    CACHE.push(...(JSON.parse(await readFile(CACHE_PATH, 'utf-8')) as Pokemon[]));
+    fillCache(JSON.parse(await readFile(CACHE_PATH, 'utf-8')) as Pokemon[]);
     return;
   }
 
@@ -30,5 +38,11 @@ export async function loadCache(): Promise<void> {
 
   console.log('Pokemons cache written to', CACHE_PATH);
 
-  CACHE.push(...pokemons);
+  fillCache(pokemons);
 }
+
+const fillCache = (pokemons: Pokemon[]) => {
+  for (const pokemon of pokemons) {
+    CACHE[pokemon.id] = pokemon;
+  }
+};
