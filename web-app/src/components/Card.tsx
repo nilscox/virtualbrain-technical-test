@@ -73,7 +73,9 @@ export const Card = memo(function Card({ pokemon, selected, disabled, onToggle }
             className="my-3 bg-white outline-2 dark:bg-blue-950"
             src={pokemon.image}
             alt={pokemon.name}
-            style={{ width: 'auto' }}
+            width={475}
+            height={475}
+            loading="lazy"
           />
           <div>Attack: {pokemon.stats.attack}</div>
           <div>Defense: {pokemon.stats.defense}</div>
