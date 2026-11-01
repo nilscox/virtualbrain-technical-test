@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": "^22.18.0 || >=23.6.0"
+  },
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
     "build": "pnpm --recursive build",
@@ -10,9 +14,6 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test": "pnpm --recursive test"
-  },
-  "dependencies": {
-    "ts-pattern": "^5.6.0"
   },
   "devDependencies": {
     "oxfmt": "^0.75.0",
