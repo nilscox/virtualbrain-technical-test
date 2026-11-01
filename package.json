@@ -1,7 +1,7 @@
 {
   "name": "technical-test",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",

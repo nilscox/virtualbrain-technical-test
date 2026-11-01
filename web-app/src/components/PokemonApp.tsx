@@ -4,7 +4,7 @@ import { Header } from './Header';
 import { useTheme } from './ThemeContext';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001'
+const API_URL = 'http://localhost:3001';
 
 const PokemonApp: React.FC = () => {
   const [pokemonList, setPokemonList] = useState<any[]>([]);
@@ -12,9 +12,9 @@ const PokemonApp: React.FC = () => {
 
   useEffect(() => {
     const getPokemon = async () => {
-            const response = await axios.get(`${API_URL}/pokemons/1`);
-			const pokemon = response.data.pokemon
-            setPokemonList([pokemon]);
+      const response = await axios.get(`${API_URL}/pokemons/1`);
+      const pokemon = response.data.pokemon;
+      setPokemonList([pokemon]);
     };
 
     getPokemon();
@@ -29,9 +29,9 @@ const PokemonApp: React.FC = () => {
   }
 
   return (
-    <div className={`${theme === "light" ? "bg-amber-50" : "bg-slate-800"} flex flex-col items-center`}>
-      <Header/>
-      <PokemonList pokemons={pokemonList}/>
+    <div className={`${theme === 'light' ? 'bg-amber-50' : 'bg-slate-800'} flex flex-col items-center`}>
+      <Header />
+      <PokemonList pokemons={pokemonList} />
     </div>
   );
 };

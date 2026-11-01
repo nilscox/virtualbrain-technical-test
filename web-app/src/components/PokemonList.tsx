@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from "./ThemeContext";
+import { useTheme } from './ThemeContext';
 import Card from './Card';
 
 interface PokemonListProps {
@@ -18,10 +18,12 @@ const PokemonList: React.FC<PokemonListProps> = ({ pokemons }) => {
   }
 
   return (
-    <div className={`p-4 grid grid-cols-4 gap-10 place-items-center ${theme === 'light' ? '' : 'bg-slate-800'}`}>
-        {pokemons.map((p) => (
-              <Card pokemon={p} />
-        ))}
+    <div
+      className={`p-4 grid grid-cols-4 gap-10 place-items-center ${theme === 'light' ? '' : 'bg-slate-800'}`}
+    >
+      {pokemons.map((p) => (
+        <Card pokemon={p} />
+      ))}
     </div>
   );
 };

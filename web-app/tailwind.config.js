@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       keyframes: {
@@ -9,13 +9,13 @@ export default {
           '100%': { transform: 'translateX(100%)' },
         },
         typing: {
-          "0%": {
-            width: "0%",
-            visibility: "hidden"
+          '0%': {
+            width: '0%',
+            visibility: 'hidden',
           },
-          "100%": {
-            width: "100%"
-          }  
+          '100%': {
+            width: '100%',
+          },
         },
       },
       animation: {
@@ -25,4 +25,4 @@ export default {
     },
   },
   plugins: [],
-}
+};

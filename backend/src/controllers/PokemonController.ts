@@ -1,74 +1,70 @@
-import { type Request, type Response, Router } from 'express'
-import { fetchPokemon } from '../services/pokeapi.ts'
+import { type Request, type Response, Router } from 'express';
+import { fetchPokemon } from '../services/pokeapi.ts';
 
-const PokemonController = Router()
+const PokemonController = Router();
 
 export interface PokemonType {
-	name: string;
-	image: string;
+  name: string;
+  image: string;
 }
 
 export interface StatBlock {
-	HP: number;
-	attack: number;
-	defense: number;
-	special_attack: number;
-	special_defense: number;
-	speed: number;
+  HP: number;
+  attack: number;
+  defense: number;
+  special_attack: number;
+  special_defense: number;
+  speed: number;
 }
 
 export type DamageRelation =
-	| "neutral"
-	| "resistant"
-	| "twice_resistant"
-	| "vulnerable"
-	| "twice_vulnerable"
-	| "immune";
+  | 'neutral'
+  | 'resistant'
+  | 'twice_resistant'
+  | 'vulnerable'
+  | 'twice_vulnerable'
+  | 'immune';
 
 export interface Resistance {
-	name: string;
-	damage_multiplier: number;
-	damage_relation: DamageRelation;
+  name: string;
+  damage_multiplier: number;
+  damage_relation: DamageRelation;
 }
 
 export interface Ability {
-	name: string;
-	slug: string;
+  name: string;
+  slug: string;
 }
 
 export interface Evolution {
-	name: string;
-	pokedexId: number;
+  name: string;
+  pokedexId: number;
 }
 
 export interface Pokemon {
-	id: number;
-	pokedexId: number;
-	name: string;
-	image: string;
-	sprite: string;
-	slug: string;
-	stats: StatBlock;
-	apiTypes: PokemonType[];
-	apiGeneration: number;
-	apiResistances: Resistance[];
-	resistanceModifyingAbilitiesForApi: Ability;
-	apiEvolutions: Evolution[];
-	apiPreEvolution: string | "none";
-	apiResistancesWithAbilities: Resistance[];
+  id: number;
+  pokedexId: number;
+  name: string;
+  image: string;
+  sprite: string;
+  slug: string;
+  stats: StatBlock;
+  apiTypes: PokemonType[];
+  apiGeneration: number;
+  apiResistances: Resistance[];
+  resistanceModifyingAbilitiesForApi: Ability;
+  apiEvolutions: Evolution[];
+  apiPreEvolution: string | 'none';
+  apiResistancesWithAbilities: Resistance[];
 }
 
+PokemonController.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
+  const { id } = req.params;
 
-PokemonController.get(
-	'/:id',
-	async (req: Request<{ id: string }>, res: Response) => {
-		const { id } = req.params
+  console.log('coucou');
+  const pokemon = await fetchPokemon(id);
 
-		console.log('coucou')
-		const pokemon = await fetchPokemon(id)
+  return res.status(200).send({ pokemon });
+});
 
-		return res.status(200).send({pokemon})
-	}
-)
-
-export { PokemonController }
+export { PokemonController };

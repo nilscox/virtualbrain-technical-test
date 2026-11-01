@@ -1,19 +1,19 @@
 {
-	"compilerOptions": {
-	  "module": "nodenext",
-	  "target": "ES2022",
-	  "moduleResolution": "nodenext",
-	  "esModuleInterop": true,
-	  "allowImportingTsExtensions": true,
-	  "verbatimModuleSyntax": true,
-	  "noEmit": true,
-	  "strict": true
-	},
-	"files": [],
-	"include": [],
-	"references": [
-	  {
-		"path": "./tsconfig.app.json"
-	  }
-	]
-  }
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "ES2022",
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "strict": true
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}
