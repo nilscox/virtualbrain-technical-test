@@ -2,6 +2,7 @@ import { createServer } from 'http';
 
 import express from 'express';
 
+import { ArenaController } from './controllers/ArenaController.ts';
 import { ContentController } from './controllers/ContentsController.ts';
 import { PokemonController } from './controllers/PokemonController.ts';
 import { loadCache } from './services/cache.ts';
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
  */
 app.use('/pokemons', PokemonController);
 app.use('/contents', ContentController);
+app.use('/arena', ArenaController);
 app.get('/ping', (_req, res) => res.status(200).send('pong'));
 
 /* -------------------------- Start the application ------------------------- */
