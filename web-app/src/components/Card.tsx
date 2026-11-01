@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import type { Pokemon } from 'shared';
 
 interface CardProps {
@@ -14,10 +14,16 @@ export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
   );
 };
 
-const Card: React.FC<CardProps> = ({ pokemon }) => {
+interface SelectableCardProps extends CardProps {
+  selected: boolean;
+  disabled: boolean;
+  onToggle: (pokemon: Pokemon) => void;
+}
+
+const Card: React.FC<SelectableCardProps> = memo(({ pokemon, selected, disabled, onToggle }) => {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
 
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const card = e.currentTarget;
     const box = card.getBoundingClientRect();
     const x = e.clientX - box.left;
@@ -35,8 +41,12 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
   };
 
   return (
-    <div
-      className={`w-62 rounded-2xl bg-linear-to-r from-amber-300 via-amber-100 to-amber-300 p-1 text-black shadow-md outline-orange-400 hover:outline-dashed`}
+    <button
+      type="button"
+      aria-pressed={selected}
+      aria-disabled={disabled}
+      onClick={() => onToggle(pokemon)}
+      className={`w-62 rounded-2xl bg-linear-to-r from-amber-300 via-amber-100 to-amber-300 p-1 text-left text-black shadow-md outline-orange-400 not-aria-pressed:hover:outline-dashed focus-visible:outline-dashed aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-pressed:outline-4 aria-pressed:outline-solid`}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       style={{
@@ -70,8 +80,8 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
           <div>Speed: {pokemon.stats.speed}</div>
         </div>
       </div>
-    </div>
+    </button>
   );
-};
+});
 
 export default Card;
