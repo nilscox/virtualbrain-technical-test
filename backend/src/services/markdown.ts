@@ -1,6 +1,6 @@
 import type { Pokemon } from 'shared';
 
-const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+import { capitalize } from '../utils.ts';
 
 /**
  * Convert a pokemon to a markdown document

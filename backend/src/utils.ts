@@ -1,4 +1,4 @@
-export const requireEnv = (name: string): string => {
+export function requireEnv(name: string): string {
   const value = process.env[name];
 
   if (!value) {
@@ -6,4 +6,8 @@ export const requireEnv = (name: string): string => {
   }
 
   return value;
-};
+}
+
+export function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
