@@ -11,8 +11,6 @@ client.interceptors.response.use(undefined, (error: AxiosError) => {
   throw new Error(`VirtualBrain request failed: ${error.response?.status ?? error.code}`);
 });
 
-const API_KEY = requireEnv('VB_API_KEY');
-
 /** Renew the access token a bit before it expires */
 const EXPIRATION_MARGIN = 60 * 1000;
 
@@ -57,7 +55,10 @@ async function getToken() {
     return token;
   }
 
-  const { data } = await client.post<ApiKeyTokenResponse>('/auth/api-key/token', { apiKey: API_KEY });
+  // Read on demand: the server must start without a key, to export the pokemons the chatbot is built from
+  const apiKey = requireEnv('VB_API_KEY');
+
+  const { data } = await client.post<ApiKeyTokenResponse>('/auth/api-key/token', { apiKey });
 
   token = {
     accessToken: data.accessToken,
