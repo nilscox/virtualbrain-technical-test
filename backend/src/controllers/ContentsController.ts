@@ -1,17 +1,31 @@
 import { type Request, type Response, Router } from 'express';
+import { createTarGzip } from 'nanotar';
+import type { Pokemon } from 'shared';
 
-import { findPokemon } from '../services/cache.ts';
+import { findPokemon, listPokemons } from '../services/cache.ts';
 import { pokemonToMarkdown } from '../services/markdown.ts';
+
+/** Named after the folder imported in the brain */
+const EXPORT_DIRECTORY = 'pokemons-ru';
 
 export const ContentController = Router();
 
 /**
- * Save all pokemon as markdown in markdown folder
+ * Return all pokemons as markdown files, in a .tar.gz archive
  * @route GET /contents/all
  * @group Contents
  */
 ContentController.get('/all', async (_req: Request, res: Response) => {
-  return res.sendStatus(200);
+  const archive = await createTarGzip(
+    listPokemons().map((pokemon) => ({
+      name: `${EXPORT_DIRECTORY}/${markdownFileName(pokemon)}`,
+      data: pokemonToMarkdown(pokemon),
+    })),
+  );
+
+  res.attachment(`${EXPORT_DIRECTORY}.tar.gz`);
+
+  return res.status(200).send(Buffer.from(archive));
 });
 
 /**
@@ -27,8 +41,12 @@ ContentController.get('/:pokemonId', (req: Request<{ pokemonId: string }>, res: 
     return res.sendStatus(404);
   }
 
-  res.attachment(`${pokemon.name}.md`);
+  res.attachment(markdownFileName(pokemon));
   res.type('text/markdown');
 
   return res.status(200).send(pokemonToMarkdown(pokemon));
 });
+
+function markdownFileName(pokemon: Pokemon) {
+  return `${pokemon.name}.md`;
+}
