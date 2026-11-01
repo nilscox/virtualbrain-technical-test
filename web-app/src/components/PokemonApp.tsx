@@ -3,16 +3,17 @@ import PokemonList from './PokemonList';
 import { Header } from './Header';
 import { useTheme } from './ThemeContext';
 import axios from 'axios';
+import type { Pokemon } from 'shared';
 
 const API_URL = 'http://localhost:3001';
 
 const PokemonApp: React.FC = () => {
-  const [pokemonList, setPokemonList] = useState<any[]>([]);
+  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
   const { theme } = useTheme();
 
   useEffect(() => {
     const getPokemon = async () => {
-      const response = await axios.get(`${API_URL}/pokemons/1`);
+      const response = await axios.get<{ pokemon: Pokemon }>(`${API_URL}/pokemons/1`);
       const pokemon = response.data.pokemon;
       setPokemonList([pokemon]);
     };

@@ -1,16 +1,17 @@
 import { useCallback, useState } from 'react';
+import type { Pokemon } from 'shared';
 import { useTheme } from './ThemeContext';
 
 interface CardProps {
-  pokemon: any;
+  pokemon: Pokemon;
 }
 
-function throttle<T extends (...args: any[]) => any>(
-  func: T,
+function throttle<Args extends unknown[]>(
+  func: (...args: Args) => void,
   delay: number = 100,
-): (...args: Parameters<T>) => void {
+): (...args: Args) => void {
   let lastCall = 0;
-  return (...args: Parameters<T>) => {
+  return (...args: Args) => {
     const now = new Date().getTime();
     if (now - lastCall < delay) {
       return;
@@ -23,7 +24,7 @@ function throttle<T extends (...args: any[]) => any>(
 export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
   return (
     <div className="bg-amber-300 rounded-2xl p-2 h-[40px] flex items-center">
-      <img src={pokemon.imageUrl} alt={pokemon.name} style={{ height: '100%' }} />
+      <img src={pokemon.image} alt={pokemon.name} style={{ height: '100%' }} />
       <div className="text-center ml-2">{pokemon.name}</div>
     </div>
   );

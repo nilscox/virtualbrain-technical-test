@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { DamageRelation, Evolution, Pokemon, Resistance } from '../controllers/PokemonController.ts';
+import type { DamageRelation, Evolution, Pokemon, Resistance } from 'shared';
 
 const POKEAPI_URL = 'https://pokeapi.co/api/v2';
 
