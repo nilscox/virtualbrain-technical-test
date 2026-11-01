@@ -17,12 +17,12 @@ const PokemonApp: React.FC = () => {
   const { selection, isSelected, isFull, toggle } = usePokemonSelection();
 
   useEffect(() => {
-    const getPokemon = async () => {
-      const response = await axios.get<{ pokemons: Pokemon[] }>(`${API_URL}/pokemons`);
-      setPokemons(response.data.pokemons);
+    const getPokemons = async () => {
+      const response = await axios.get<Pokemon[]>(`${API_URL}/pokemons`);
+      setPokemons(response.data);
     };
 
-    getPokemon();
+    getPokemons();
   }, []);
 
   if (!pokemons.length) {
