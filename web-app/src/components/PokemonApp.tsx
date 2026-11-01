@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Pokemon } from 'shared';
 
 import { Header } from './Header';
@@ -14,9 +14,8 @@ const PokemonApp: React.FC = () => {
 
   useEffect(() => {
     const getPokemon = async () => {
-      const response = await axios.get<{ pokemon: Pokemon }>(`${API_URL}/pokemons/1`);
-      const pokemon = response.data.pokemon;
-      setPokemonList([pokemon]);
+      const response = await axios.get<{ pokemons: Pokemon[] }>(`${API_URL}/pokemons`);
+      setPokemonList(response.data.pokemons);
     };
 
     getPokemon();
