@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import PokemonList from './PokemonList';
-import { Header } from './Header';
-import { useTheme } from './ThemeContext';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import type { Pokemon } from 'shared';
+
+import { Header } from './Header';
+import PokemonList from './PokemonList';
+import { useTheme } from './ThemeContext';
 
 const API_URL = '/api';
 
@@ -23,8 +24,8 @@ const PokemonApp: React.FC = () => {
 
   if (!pokemonList.length) {
     return (
-      <div className="flex items-center h-screen">
-        <div className="text-lg text-center w-full">Loading Pokemons...</div>
+      <div className="flex h-screen items-center">
+        <div className="w-full text-center text-lg">Loading Pokemons...</div>
       </div>
     );
   }

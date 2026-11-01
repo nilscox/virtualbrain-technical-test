@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Pokemon } from 'shared';
+
 import { useTheme } from './ThemeContext';
 
 interface CardProps {
@@ -8,9 +9,9 @@ interface CardProps {
 
 export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
   return (
-    <div className="bg-amber-300 rounded-2xl p-2 h-[40px] flex items-center">
+    <div className="flex h-[40px] items-center rounded-2xl bg-amber-300 p-2">
       <img src={pokemon.image} alt={pokemon.name} style={{ height: '100%' }} />
-      <div className="text-center ml-2">{pokemon.name}</div>
+      <div className="ml-2 text-center">{pokemon.name}</div>
     </div>
   );
 };
@@ -38,7 +39,7 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
 
   return (
     <div
-      className={` bg-gradient-to-r from-amber-300 via-amber-100 to-amber-300  p-1 rounded-2xl w-[250px] shadow-md outline-orange-400 hover:outline-dashed`}
+      className={`w-[250px] rounded-2xl bg-gradient-to-r from-amber-300 via-amber-100 to-amber-300 p-1 shadow-md outline-orange-400 hover:outline-dashed`}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       style={{
@@ -46,9 +47,9 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
         transition: 'all 400ms cubic-bezier(0.03, 0.98, 0.52, 0.99) 0s',
       }}
     >
-      <div className={`rounded-2xl bg-gradient-to-br from-black/10 via-white/70 to-black/10 `}>
-        <div className="p-4 flex-col rounded-2xl">
-          <div className="flex gap-3 justify-between">
+      <div className={`rounded-2xl bg-gradient-to-br from-black/10 via-white/70 to-black/10`}>
+        <div className="flex-col rounded-2xl p-4">
+          <div className="flex justify-between gap-3">
             <div className="font-bold">{pokemon.name}</div>
             <div>HP: {pokemon.stats.HP}</div>
             {pokemon.apiTypes.map((type) => (
@@ -62,7 +63,7 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
             ))}
           </div>
           <img
-            className={`${theme === 'light' ? 'bg-white' : 'bg-blue-950'} outline outline-2 my-3`}
+            className={`${theme === 'light' ? 'bg-white' : 'bg-blue-950'} my-3 outline outline-2`}
             src={pokemon.image}
             alt={pokemon.name}
             style={{ width: 'auto' }}

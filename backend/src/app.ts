@@ -1,6 +1,7 @@
+import { createServer } from 'http';
+
 import express from 'express';
 
-import { createServer } from 'http';
 import { ContentController } from './controllers/ContentsController.ts';
 import { PokemonController } from './controllers/PokemonController.ts';
 

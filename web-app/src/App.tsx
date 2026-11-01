@@ -1,5 +1,5 @@
-import { ThemeProvider } from './components/ThemeContext';
 import PokemonApp from './components/PokemonApp';
+import { ThemeProvider } from './components/ThemeContext';
 
 export default function App() {
   return (
