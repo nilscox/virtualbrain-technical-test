@@ -5,7 +5,7 @@ import { useTheme } from './ThemeContext';
 import axios from 'axios';
 import type { Pokemon } from 'shared';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = '/api';
 
 const PokemonApp: React.FC = () => {
   const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);

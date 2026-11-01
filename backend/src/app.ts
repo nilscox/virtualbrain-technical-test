@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 
 import { createServer } from 'http';
@@ -12,13 +11,6 @@ app.disable('x-powered-by');
 const httpServer = createServer(app);
 
 app.set('trust proxy', 1);
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-    exposedHeaders: ['set-cookie'],
-  }),
-);
 
 /**
  * Body parser
