@@ -61,7 +61,7 @@ export interface Pokemon {
 
 PokemonController.get(
 	'/:id',
-	async (req: Request, res: Response) => {
+	async (req: Request<{ id: string }>, res: Response) => {
 		const { id } = req.params
 
 		console.log('coucou')
