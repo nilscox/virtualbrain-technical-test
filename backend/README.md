@@ -1,5 +1,4 @@
-To install and launch: 
+To install and launch, from the repository root:
 
-npm install 
-npm run dev
-
+pnpm install
+pnpm dev

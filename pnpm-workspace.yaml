@@ -1,0 +1,9 @@
+packages:
+  - backend
+  - web-app
+
+allowBuilds:
+  esbuild: true
+
+overrides:
+  "@types/express-serve-static-core": ~5.0.7

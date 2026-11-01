@@ -1,5 +1,5 @@
 import { defineConfig } from "eslint/config";
-import mainConfig from "../../eslint.config.mjs";
+import mainConfig from "../eslint.config.mjs";
 
 export default defineConfig([
 	mainConfig,
@@ -15,7 +15,8 @@ export default defineConfig([
 					jsx: true,
 				},
 
-				project: ["apps/api/tsconfig.*?.json"],
+				project: ["./tsconfig.app.json"],
+				tsconfigRootDir: import.meta.dirname,
 			},
 		},
 	}
