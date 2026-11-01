@@ -10,7 +10,11 @@ import { queryChatbot } from '../services/virtualbrain.ts';
 export const ArenaController = Router();
 
 const battleBodySchema = z.object({
-  pokemonIds: z.array(z.int().positive()).min(2, 'A battle needs at least two pokemons'),
+  pokemonIds: z
+    .array(z.int().positive())
+    .min(2, 'A battle needs at least two pokemons')
+    .max(6, 'A battle allows at most six pokemons')
+    .refine((ids) => new Set(ids).size === ids.length, 'A pokemon cannot fight itself'),
 });
 
 /**
