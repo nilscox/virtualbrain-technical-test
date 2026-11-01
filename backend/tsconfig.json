@@ -8,13 +8,8 @@
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "types": ["node"]
   },
-  "files": [],
-  "include": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+  "include": ["src"]
 }

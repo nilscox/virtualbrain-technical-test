@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node --env-file-if-exists=.env --watch src/app.ts",
     "start": "node --env-file-if-exists=.env src/app.ts",
-    "typecheck": "tsc -p tsconfig.app.json",
+    "typecheck": "tsc",
     "test": "node --test 'src/**/*.test.ts'"
   },
   "dependencies": {
