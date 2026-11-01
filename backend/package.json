@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node --watch src/app.ts",
     "start": "node src/app.ts",
-    "typecheck": "tsc -p tsconfig.app.json"
+    "typecheck": "tsc -p tsconfig.app.json",
+    "test": "node --test"
   },
   "dependencies": {
     "express": "^5.3.0",
