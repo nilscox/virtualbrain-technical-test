@@ -1,13 +1,19 @@
 import { type Request, type Response, Router } from 'express';
 
-import { fetchPokemon } from '../services/pokeapi.ts';
+import { CACHE } from '../services/cache.ts';
 
 const PokemonController = Router();
 
-PokemonController.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
+PokemonController.get('/', (_req: Request, res: Response) => {
+  return res.status(200).send({ pokemons: CACHE });
+});
 
-  const pokemon = await fetchPokemon(id);
+PokemonController.get('/:id', (req: Request<{ id: string }>, res: Response) => {
+  const pokemon = CACHE.find(({ id }) => id === Number(req.params.id));
+
+  if (!pokemon) {
+    return res.sendStatus(404);
+  }
 
   return res.status(200).send({ pokemon });
 });

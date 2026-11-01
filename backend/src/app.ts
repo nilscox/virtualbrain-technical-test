@@ -4,6 +4,9 @@ import express from 'express';
 
 import { ContentController } from './controllers/ContentsController.ts';
 import { PokemonController } from './controllers/PokemonController.ts';
+import { loadCache } from './services/cache.ts';
+
+await loadCache();
 
 /** App */
 const app = express();
