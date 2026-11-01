@@ -5,6 +5,7 @@ import express from 'express';
 import { ArenaController } from './controllers/ArenaController.ts';
 import { ContentController } from './controllers/ContentsController.ts';
 import { PokemonController } from './controllers/PokemonController.ts';
+import { errorHandler } from './middlewares/errorHandler.ts';
 import { loadCache } from './services/cache.ts';
 
 await loadCache();
@@ -30,6 +31,8 @@ app.use('/pokemons', PokemonController);
 app.use('/contents', ContentController);
 app.use('/arena', ArenaController);
 app.get('/ping', (_req, res) => res.status(200).send('pong'));
+
+app.use(errorHandler);
 
 /* -------------------------- Start the application ------------------------- */
 

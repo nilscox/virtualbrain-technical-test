@@ -20,13 +20,8 @@ const battleBodySchema = z.object({
  * @param {number[]} pokemonIds.body.required - IDs of the pokemons fighting, at least two
  */
 ArenaController.post('/battles', async (req: Request, res: Response) => {
-  const body = battleBodySchema.safeParse(req.body);
-
-  if (!body.success) {
-    return res.status(400).send({ message: z.prettifyError(body.error) });
-  }
-
-  const pokemons = body.data.pokemonIds.map(findPokemon);
+  const { pokemonIds } = battleBodySchema.parse(req.body);
+  const pokemons = pokemonIds.map(findPokemon);
 
   if (!pokemons.every((pokemon) => pokemon !== undefined)) {
     return res.status(404).send({ message: 'Pokemon not found' });
