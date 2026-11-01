@@ -2,8 +2,8 @@ import cors from 'cors';
 import express from 'express';
 
 import { createServer } from 'http';
-import { PokemonController } from './controllers/PokemonController.ts';
 import { ContentController } from './controllers/ContentsController.ts';
+import { PokemonController } from './controllers/PokemonController.ts';
 
 /** App */
 const app = express();
