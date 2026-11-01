@@ -7,7 +7,7 @@ interface CardProps {
 
 export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
   return (
-    <div className="flex h-10 items-center rounded-2xl bg-amber-300 p-2">
+    <div className="flex h-10 items-center rounded-2xl bg-amber-300 p-2 text-black">
       <img src={pokemon.image} alt={pokemon.name} style={{ height: '100%' }} />
       <div className="ml-2 text-center">{pokemon.name}</div>
     </div>
@@ -36,7 +36,7 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
 
   return (
     <div
-      className={`w-62 rounded-2xl bg-linear-to-r from-amber-300 via-amber-100 to-amber-300 p-1 shadow-md outline-orange-400 hover:outline-dashed`}
+      className={`w-62 rounded-2xl bg-linear-to-r from-amber-300 via-amber-100 to-amber-300 p-1 text-black shadow-md outline-orange-400 hover:outline-dashed`}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       style={{

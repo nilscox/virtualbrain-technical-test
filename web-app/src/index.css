@@ -10,6 +10,10 @@
 }
 
 @layer base {
+  body {
+    @apply text-slate-700 dark:text-white;
+  }
+
   /* Tailwind 4 no longer sets a pointer cursor on buttons */
   button:not(:disabled),
   [role='button']:not(:disabled) {
