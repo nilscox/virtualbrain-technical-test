@@ -5,7 +5,7 @@ export default defineConfig({
   printWidth: 110,
   sortImports: true,
   sortTailwindcss: {
-    config: './web-app/tailwind.config.js',
+    stylesheet: './web-app/src/index.css',
   },
   ignorePatterns: ['pnpm-lock.yaml'],
 });

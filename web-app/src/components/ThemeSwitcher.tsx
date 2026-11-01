@@ -5,7 +5,7 @@ const ThemeSwitcher: React.FC = () => {
   return (
     <button
       onClick={() => document.documentElement.classList.toggle('dark')}
-      className="absolute right-0 top-0 m-4"
+      className="absolute top-0 right-0 m-4"
     >
       <div className="flex items-center gap-2 dark:hidden">
         Dark <IoIosMoon />
