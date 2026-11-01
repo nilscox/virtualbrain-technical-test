@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import type { Pokemon } from 'shared';
 
 import { fetchPokemons } from '../api';
+import { useBattle } from '../hooks/useBattle';
 import { usePokemonFilters } from '../hooks/usePokemonFilters';
 import { usePokemonSelection } from '../hooks/usePokemonSelection';
+import BattleDialog from './BattleDialog';
 import { Header } from './Header';
 import PokemonFilters from './PokemonFilters';
 import PokemonList from './PokemonList';
@@ -13,6 +15,7 @@ const PokemonApp: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const filters = usePokemonFilters(pokemons);
   const { selection, isSelected, isFull, toggle } = usePokemonSelection();
+  const { battle, start: startBattle, stop: stopBattle } = useBattle();
 
   useEffect(() => {
     fetchPokemons().then(setPokemons);
@@ -36,7 +39,8 @@ const PokemonApp: React.FC = () => {
         isFull={isFull}
         onToggle={toggle}
       />
-      <PokemonSelection selection={selection} onUnselect={toggle} />
+      <PokemonSelection selection={selection} onUnselect={toggle} onFight={() => startBattle(selection)} />
+      {battle && <BattleDialog battle={battle} onClose={stopBattle} />}
     </div>
   );
 };
