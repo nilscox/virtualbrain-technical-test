@@ -2,20 +2,20 @@
 	"name": "backend",
 	"private": true,
 	"version": "0.0.0",
-	"type": "commonjs",
+	"type": "module",
 	"scripts": {
-		"dev": "nodemon --config ./nodemon.json",
+		"dev": "node --watch src/app.ts",
+		"start": "node src/app.ts",
+		"typecheck": "tsc -p tsconfig.app.json",
 		"lint": "eslint ."
 	},
 	"dependencies": {
 		"cors": "^2.8.5",
-		"express": "^5.1.0",
-		"ts-node": "^10.9.2"
+		"express": "^5.1.0"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.13",
 		"@types/express": "^5.0.3",
-		"@types/node": "^24.1.0",
-		"nodemon": "^2.0.22"
+		"@types/node": "^24.1.0"
 	}
 }

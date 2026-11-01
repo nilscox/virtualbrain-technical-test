@@ -1,5 +1,0 @@
-{
-	"ext": "js,ts,json",
-	"exec": "ts-node --project ./tsconfig.app.json ./src/app.ts"
-  }
-  

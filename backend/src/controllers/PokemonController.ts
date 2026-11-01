@@ -1,5 +1,5 @@
 import { type Request, type Response, Router } from 'express'
-import { fetchPokemon } from '../services/pokeapi'
+import { fetchPokemon } from '../services/pokeapi.ts'
 
 const PokemonController = Router()
 
