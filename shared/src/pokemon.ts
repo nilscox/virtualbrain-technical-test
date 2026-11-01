@@ -1,19 +1,19 @@
-export interface PokemonType {
+export type PokemonType = {
   name: string;
   image: string;
-}
+};
 
-export interface StatBlock {
+export type StatBlock = {
   HP: number;
   attack: number;
   defense: number;
   speed: number;
-}
+};
 
-export interface Pokemon {
+export type Pokemon = {
   id: number;
   name: string;
   image: string;
   stats: StatBlock;
   apiTypes: PokemonType[];
-}
+};

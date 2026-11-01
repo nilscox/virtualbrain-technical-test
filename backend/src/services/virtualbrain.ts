@@ -34,18 +34,18 @@ export async function queryChatbot(query: string): Promise<Readable> {
   return data;
 }
 
-interface ApiKeyTokenResponse {
+type ApiKeyTokenResponse = {
   accessToken: string;
   /** Access token TTL in seconds */
   expiresIn: number;
   chatbotId: string;
-}
+};
 
-interface Token {
+type Token = {
   accessToken: string;
   chatbotId: string;
   expiresAt: number;
-}
+};
 
 let token: Token | undefined;
 

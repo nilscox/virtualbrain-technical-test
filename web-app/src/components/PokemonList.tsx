@@ -3,12 +3,12 @@ import type { Pokemon } from 'shared';
 
 import Card from './Card';
 
-interface PokemonListProps {
+type PokemonListProps = {
   pokemons: Pokemon[];
   isSelected: (pokemon: Pokemon) => boolean;
   isFull: boolean;
   onToggle: (pokemon: Pokemon) => void;
-}
+};
 
 const PokemonList: React.FC<PokemonListProps> = ({ pokemons, isSelected, isFull, onToggle }) => {
   if (pokemons.length === 0) {

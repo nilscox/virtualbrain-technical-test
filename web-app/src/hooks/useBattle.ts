@@ -4,11 +4,11 @@ import type { Pokemon } from 'shared';
 import { fetchBattle } from '../api';
 import { readStream } from '../utils';
 
-export interface Battle {
+export type Battle = {
   pokemons: Pokemon[];
   text: string;
   status: 'fighting' | 'done' | 'error';
-}
+};
 
 export function useBattle() {
   const [battle, setBattle] = useState<Battle>();

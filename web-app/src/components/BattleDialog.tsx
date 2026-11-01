@@ -4,10 +4,10 @@ import Markdown from 'react-markdown';
 import type { Battle } from '../hooks/useBattle';
 import { MiniCard } from './Card';
 
-interface BattleDialogProps {
+type BattleDialogProps = {
   battle: Battle;
   onClose: () => void;
-}
+};
 
 const BattleDialog: React.FC<BattleDialogProps> = ({ battle, onClose }) => {
   const dialog = useRef<HTMLDialogElement>(null);

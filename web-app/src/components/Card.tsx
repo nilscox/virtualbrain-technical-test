@@ -1,9 +1,9 @@
 import { memo, useState } from 'react';
 import type { Pokemon } from 'shared';
 
-interface CardProps {
+type CardProps = {
   pokemon: Pokemon;
-}
+};
 
 export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
   return (
@@ -14,11 +14,11 @@ export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
   );
 };
 
-interface SelectableCardProps extends CardProps {
+type SelectableCardProps = CardProps & {
   selected: boolean;
   disabled: boolean;
   onToggle: (pokemon: Pokemon) => void;
-}
+};
 
 const Card: React.FC<SelectableCardProps> = memo(({ pokemon, selected, disabled, onToggle }) => {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });

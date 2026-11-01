@@ -3,11 +3,11 @@ import type { Pokemon } from 'shared';
 
 import { MiniCard } from './Card';
 
-interface PokemonSelectionProps {
+type PokemonSelectionProps = {
   selection: Pokemon[];
   onUnselect: (pokemon: Pokemon) => void;
   onFight: () => void;
-}
+};
 
 const PokemonSelection: React.FC<PokemonSelectionProps> = ({ selection, onUnselect, onFight }) => {
   if (selection.length === 0) {

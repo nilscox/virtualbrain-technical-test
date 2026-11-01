@@ -30,12 +30,12 @@ export async function fetchAllPokemons(): Promise<Pokemon[]> {
   return pokemons;
 }
 
-interface NamedResource {
+type NamedResource = {
   name: string;
   url: string;
-}
+};
 
-interface ApiPokemon {
+type ApiPokemon = {
   id: number;
   name: string;
   sprites: {
@@ -43,12 +43,12 @@ interface ApiPokemon {
   };
   stats: { base_stat: number; stat: NamedResource }[];
   types: { slot: number; type: NamedResource }[];
-}
+};
 
-interface ApiType {
+type ApiType = {
   name: string;
   sprites: { 'generation-viii': { 'sword-shield': { name_icon: string | null } } };
-}
+};
 
 const fetchType = (url: string): Promise<ApiType> => {
   let type = typesCache.get(url);
