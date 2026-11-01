@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import type { Pokemon } from 'shared';
 
-import { useTheme } from './ThemeContext';
-
 interface CardProps {
   pokemon: Pokemon;
 }
@@ -17,7 +15,6 @@ export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
 };
 
 const Card: React.FC<CardProps> = ({ pokemon }) => {
-  const { theme } = useTheme();
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -63,7 +60,7 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
             ))}
           </div>
           <img
-            className={`${theme === 'light' ? 'bg-white' : 'bg-blue-950'} my-3 outline outline-2`}
+            className="my-3 bg-white outline outline-2 dark:bg-blue-950"
             src={pokemon.image}
             alt={pokemon.name}
             style={{ width: 'auto' }}

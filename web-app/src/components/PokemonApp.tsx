@@ -6,14 +6,12 @@ import { usePokemonFilters } from '../hooks/usePokemonFilters';
 import { Header } from './Header';
 import PokemonFilters from './PokemonFilters';
 import PokemonList from './PokemonList';
-import { useTheme } from './ThemeContext';
 
 const API_URL = '/api';
 
 const PokemonApp: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const filters = usePokemonFilters(pokemons);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const getPokemon = async () => {
@@ -33,7 +31,7 @@ const PokemonApp: React.FC = () => {
   }
 
   return (
-    <div className={`${theme === 'light' ? 'bg-amber-50' : 'bg-slate-800'} flex flex-col items-center`}>
+    <div className="flex flex-col items-center bg-amber-50 dark:bg-slate-800">
       <Header />
       <PokemonFilters {...filters} />
       <PokemonList pokemons={filters.filteredPokemons} />
