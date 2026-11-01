@@ -1,7 +1,7 @@
 import { pipeline } from 'stream/promises';
 
 import { type Request, type Response, Router } from 'express';
-import type { Pokemon } from 'shared';
+import { MAX_BATTLE_POKEMONS, type Pokemon } from 'shared';
 import { z } from 'zod';
 
 import { findPokemon } from '../services/cache.ts';
@@ -13,7 +13,7 @@ const battleBodySchema = z.object({
   pokemonIds: z
     .array(z.int().positive())
     .min(2, 'A battle needs at least two pokemons')
-    .max(6, 'A battle allows at most six pokemons')
+    .max(MAX_BATTLE_POKEMONS, `A battle allows at most ${MAX_BATTLE_POKEMONS} pokemons`)
     .refine((ids) => new Set(ids).size === ids.length, 'A pokemon cannot fight itself'),
 });
 
