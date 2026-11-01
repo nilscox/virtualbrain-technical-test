@@ -1,24 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import type { Pokemon } from 'shared';
 import { useTheme } from './ThemeContext';
 
 interface CardProps {
   pokemon: Pokemon;
-}
-
-function throttle<Args extends unknown[]>(
-  func: (...args: Args) => void,
-  delay: number = 100,
-): (...args: Args) => void {
-  let lastCall = 0;
-  return (...args: Args) => {
-    const now = new Date().getTime();
-    if (now - lastCall < delay) {
-      return;
-    }
-    lastCall = now;
-    return func(...args);
-  };
 }
 
 export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
@@ -32,30 +17,25 @@ export const MiniCard: React.FC<CardProps> = ({ pokemon }) => {
 
 const Card: React.FC<CardProps> = ({ pokemon }) => {
   const { theme } = useTheme();
-  if (!pokemon) {
-    return null;
-  }
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
 
-  const onMouseMove = useCallback(
-    throttle((e: React.MouseEvent<HTMLDivElement>) => {
-      const card = e.currentTarget;
-      const box = card.getBoundingClientRect();
-      const x = e.clientX - box.left;
-      const y = e.clientY - box.top;
-      const centerX = box.width / 2;
-      const centerY = box.height / 2;
-      const rotateX = (y - centerY) / 10;
-      const rotateY = (centerX - x) / 10;
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const box = card.getBoundingClientRect();
+    const x = e.clientX - box.left;
+    const y = e.clientY - box.top;
+    const centerX = box.width / 2;
+    const centerY = box.height / 2;
+    const rotateX = (y - centerY) / 10;
+    const rotateY = (centerX - x) / 10;
 
-      setRotate({ x: rotateX, y: rotateY });
-    }),
-    [],
-  );
+    setRotate({ x: rotateX, y: rotateY });
+  };
 
   const onMouseLeave = () => {
     setRotate({ x: 0, y: 0 });
   };
+
   return (
     <div
       className={` bg-gradient-to-r from-amber-300 via-amber-100 to-amber-300  p-1 rounded-2xl w-[250px] shadow-md outline-orange-400 hover:outline-dashed`}
@@ -72,7 +52,13 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
             <div className="font-bold">{pokemon.name}</div>
             <div>HP: {pokemon.stats.HP}</div>
             {pokemon.apiTypes.map((type) => (
-              <img className="self-end" src={type.image} alt={type.name} style={{ width: '20px' }} />
+              <img
+                key={type.name}
+                className="self-end"
+                src={type.image}
+                alt={type.name}
+                style={{ width: '20px' }}
+              />
             ))}
           </div>
           <img
