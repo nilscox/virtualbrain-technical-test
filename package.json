@@ -3,10 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.4.1",
-  "engines": {
-    "node": "^22.18.0 || >=23.6.0"
-  },
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
     "build": "pnpm --recursive build",
@@ -18,12 +14,19 @@
   "devDependencies": {
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
+    "oxlint-tsgolint": "^7.0.2005",
     "typescript": "~7.0.2"
   },
+  "engines": {
+    "node": "^22.18.0 || >=23.6.0"
+  },
+  "packageManager": "pnpm@12.4.1",
   "cspell": {
     "words": [
       "pokemons",
-      "pokemon"
+      "pokemon",
+      "pokeapi",
+      "bulbasaur"
     ]
   }
 }

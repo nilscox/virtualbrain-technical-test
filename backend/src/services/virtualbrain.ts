@@ -4,34 +4,6 @@ import axios, { type AxiosError } from 'axios';
 
 import { requireEnv } from '../utils.ts';
 
-const client = axios.create({ baseURL: 'https://chatbot-api.getvirtualbrain.com/v1' });
-
-/** Axios errors hold the request config: rethrow without it to keep the credentials out of the logs */
-client.interceptors.response.use(undefined, (error: AxiosError) => {
-  throw new Error(`VirtualBrain request failed: ${error.response?.status ?? error.code}`);
-});
-
-/** Renew the access token a bit before it expires */
-const EXPIRATION_MARGIN = 60 * 1000;
-
-/**
- * Send a query to the chatbot, its answer is streamed as plain text
- */
-export async function queryChatbot(query: string): Promise<Readable> {
-  const { accessToken, chatbotId } = await getToken();
-
-  const { data } = await client.post<Readable>(
-    `/open-completion/${chatbotId}/query`,
-    { query },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      responseType: 'stream',
-    },
-  );
-
-  return data;
-}
-
 type ApiKeyTokenResponse = {
   accessToken: string;
   /** Access token TTL in seconds */
@@ -45,26 +17,56 @@ type Token = {
   expiresAt: number;
 };
 
-let token: Token | undefined;
+export class VirtualBrainClient {
+  private readonly client = axios.create({ baseURL: 'https://chatbot-api.getvirtualbrain.com/v1' });
+  /** Renew the access token a bit before it expires */
+  private readonly expirationMargin = 60 * 1000;
+  private token: Token | undefined;
 
-/**
- * Exchange the API key for an access token, reused until it expires
- */
-async function getToken() {
-  if (token && Date.now() < token.expiresAt) {
-    return token;
+  constructor() {
+    /** Axios errors hold the request config: rethrow without it to keep the credentials out of the logs */
+    this.client.interceptors.response.use(undefined, (error: AxiosError) => {
+      throw new Error(`VirtualBrain request failed: ${error.response?.status ?? error.code}`);
+    });
   }
 
-  // Read on demand: the server must start without a key, to export the pokemons the chatbot is built from
-  const apiKey = requireEnv('VB_API_KEY');
+  /**
+   * Send a query to the chatbot, its answer is streamed as plain text
+   */
+  async queryChatbot(query: string): Promise<Readable> {
+    const { accessToken, chatbotId } = await this.getToken();
 
-  const { data } = await client.post<ApiKeyTokenResponse>('/auth/api-key/token', { apiKey });
+    const { data } = await this.client.post<Readable>(
+      `/open-completion/${chatbotId}/query`,
+      { query },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        responseType: 'stream',
+      },
+    );
 
-  token = {
-    accessToken: data.accessToken,
-    chatbotId: data.chatbotId,
-    expiresAt: Date.now() + data.expiresIn * 1000 - EXPIRATION_MARGIN,
-  };
+    return data;
+  }
 
-  return token;
+  /**
+   * Exchange the API key for an access token, reused until it expires
+   */
+  private async getToken() {
+    if (this.token && Date.now() < this.token.expiresAt) {
+      return this.token;
+    }
+
+    // Read on demand: the server must start without a key, to export the pokemons the chatbot is built from
+    const { data } = await this.client.post<ApiKeyTokenResponse>('/auth/api-key/token', {
+      apiKey: requireEnv('VB_API_KEY'),
+    });
+
+    this.token = {
+      accessToken: data.accessToken,
+      chatbotId: data.chatbotId,
+      expiresAt: Date.now() + data.expiresIn * 1000 - this.expirationMargin,
+    };
+
+    return this.token;
+  }
 }

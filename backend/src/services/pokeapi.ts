@@ -1,34 +1,4 @@
-import axios from 'axios';
 import type { Pokemon } from 'shared';
-
-const POKEAPI_URL = 'https://pokeapi.co/api/v2';
-
-/** Generations 1 to 8 */
-const POKEMON_COUNT = 898;
-
-const CONCURRENCY = 10;
-
-/** Pokemons share a handful of types: fetch each of them only once */
-const typesCache = new Map<string, Promise<ApiType>>();
-
-/**
- * Fetch all pokemons from PokeAPI, a few at a time to avoid flooding it
- */
-export async function fetchAllPokemons(): Promise<Pokemon[]> {
-  const pokemons: Pokemon[] = [];
-  let nextIndex = 0;
-
-  const worker = async () => {
-    while (nextIndex < POKEMON_COUNT) {
-      const index = nextIndex++;
-      pokemons[index] = await fetchPokemon(index + 1);
-    }
-  };
-
-  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
-
-  return pokemons;
-}
 
 type NamedResource = {
   name: string;
@@ -50,43 +20,85 @@ type ApiType = {
   sprites: { 'generation-viii': { 'sword-shield': { name_icon: string | null } } };
 };
 
-const fetchType = (url: string): Promise<ApiType> => {
-  let type = typesCache.get(url);
+export class PokeApi {
+  private readonly pokeApiUrl = 'https://pokeapi.co/api/v2';
+  /** Generations 1 to 8 */
+  private readonly pokemonCount = 898;
+  private readonly fetchConcurrency = 10;
+  /** Pokemons share a handful of types: fetch each of them only once */
+  private readonly typesCache = new Map<string, Promise<ApiType>>();
 
-  if (!type) {
-    type = axios.get<ApiType>(url).then((r) => r.data);
-    typesCache.set(url, type);
+  private fetch: typeof globalThis.fetch;
+
+  constructor(fetch = globalThis.fetch) {
+    this.fetch = fetch;
   }
 
-  return type;
-};
+  /**
+   * Fetch all pokemons from PokeAPI, a few at a time to avoid flooding it
+   */
+  async fetchAllPokemons(): Promise<Pokemon[]> {
+    const pokemons: Pokemon[] = [];
+    let nextIndex = 0;
 
-const baseStat = (pokemon: ApiPokemon, name: string): number =>
-  pokemon.stats.find((s) => s.stat.name === name)?.base_stat ?? 0;
+    const worker = async () => {
+      while (nextIndex < this.pokemonCount) {
+        const index = nextIndex++;
+        pokemons[index] = await this.fetchPokemon(index + 1);
+      }
+    };
 
-/**
- * Fetch a pokemon from PokeAPI and adapt it to the `Pokemon` shape
- */
-async function fetchPokemon(id: number): Promise<Pokemon> {
-  const { data: pokemon } = await axios.get<ApiPokemon>(`${POKEAPI_URL}/pokemon/${id}`);
+    await Promise.all(Array.from({ length: this.fetchConcurrency }, worker));
 
-  const types = await Promise.all(
-    [...pokemon.types].sort((a, b) => a.slot - b.slot).map(({ type }) => fetchType(type.url)),
-  );
+    return pokemons;
+  }
 
-  return {
-    id: pokemon.id,
-    name: pokemon.name,
-    image: pokemon.sprites.other['official-artwork'].front_default ?? '',
-    stats: {
-      HP: baseStat(pokemon, 'hp'),
-      attack: baseStat(pokemon, 'attack'),
-      defense: baseStat(pokemon, 'defense'),
-      speed: baseStat(pokemon, 'speed'),
-    },
-    apiTypes: types.map((type) => ({
-      name: type.name,
-      image: type.sprites['generation-viii']['sword-shield'].name_icon ?? '',
-    })),
-  };
+  private fetchType(url: string): Promise<ApiType> {
+    let type = this.typesCache.get(url);
+
+    if (!type) {
+      type = this.get<ApiType>(url);
+      this.typesCache.set(url, type);
+    }
+
+    return type;
+  }
+
+  private static baseStat(pokemon: ApiPokemon, name: string): number {
+    return pokemon.stats.find((s) => s.stat.name === name)?.base_stat ?? 0;
+  }
+
+  private async fetchPokemon(id: number): Promise<Pokemon> {
+    const pokemon = await this.get<ApiPokemon>(`${this.pokeApiUrl}/pokemon/${id}`);
+
+    const types = await Promise.all(
+      [...pokemon.types].sort((a, b) => a.slot - b.slot).map(({ type }) => this.fetchType(type.url)),
+    );
+
+    return {
+      id: pokemon.id,
+      name: pokemon.name,
+      image: pokemon.sprites.other['official-artwork'].front_default ?? '',
+      stats: {
+        HP: PokeApi.baseStat(pokemon, 'hp'),
+        attack: PokeApi.baseStat(pokemon, 'attack'),
+        defense: PokeApi.baseStat(pokemon, 'defense'),
+        speed: PokeApi.baseStat(pokemon, 'speed'),
+      },
+      apiTypes: types.map((type) => ({
+        name: type.name,
+        image: type.sprites['generation-viii']['sword-shield'].name_icon ?? '',
+      })),
+    };
+  }
+
+  private async get<T>(url: string): Promise<T> {
+    const response = await this.fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`PokeAPI request failed: ${response.status}`);
+    }
+
+    return response.json() as Promise<T>;
+  }
 }

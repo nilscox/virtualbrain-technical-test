@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
-import { pokemonToMarkdown } from './markdown.ts';
+import { Markdown } from './markdown.ts';
 
-describe('pokemonToMarkdown', () => {
-  test('converts a pokemon to markdown', () => {
-    const markdown = pokemonToMarkdown({
+void describe('Markdown.pokemonToMarkdown', () => {
+  void test('converts a pokemon to markdown', () => {
+    const markdown = Markdown.pokemonToMarkdown({
       id: 1,
       name: 'bulbasaur',
       image: 'artwork-1.png',

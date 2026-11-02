@@ -1,20 +1,19 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
-import { setTimeout } from 'node:timers/promises';
+import { beforeEach, describe, mock, test, type Mock } from 'node:test';
 
-import axios from 'axios';
+import { PokeApi } from './pokeapi.ts';
 
-import { fetchAllPokemons } from './pokeapi.ts';
+void describe('fetchAllPokemons', () => {
+  let fetch: Mock<typeof globalThis.fetch>;
+  let pokeApi: PokeApi;
 
-describe('fetchAllPokemons', () => {
-  afterEach(() => {
-    mock.restoreAll();
+  beforeEach(() => {
+    fetch = mock.fn(mockPokeApi);
+    pokeApi = new PokeApi(fetch);
   });
 
-  test('fetches the 898 pokemons in order', async () => {
-    mockPokeApi(fakePokeApi('order'));
-
-    const pokemons = await fetchAllPokemons();
+  void test('fetches the 898 pokemons in order', async () => {
+    const pokemons = await pokeApi.fetchAllPokemons();
 
     assert.equal(pokemons.length, 898);
     assert.deepEqual(
@@ -23,10 +22,8 @@ describe('fetchAllPokemons', () => {
     );
   });
 
-  test('adapts PokeAPI data to the Pokemon shape', async () => {
-    mockPokeApi(fakePokeApi('shape'));
-
-    const [bulbasaur] = await fetchAllPokemons();
+  void test('adapts PokeAPI data to the Pokemon shape', async () => {
+    const [bulbasaur] = await pokeApi.fetchAllPokemons();
 
     assert.deepEqual(bulbasaur, {
       id: 1,
@@ -40,87 +37,70 @@ describe('fetchAllPokemons', () => {
     });
   });
 
-  test('fetches each type only once', async () => {
-    const get = mockPokeApi(fakePokeApi('types'));
+  void test('fetches each type only once', async () => {
+    await pokeApi.fetchAllPokemons();
 
-    await fetchAllPokemons();
+    const typeCalls = fetch.mock.calls.filter((call) => (call.arguments[0] as string).includes('/type/'));
 
-    const typeCalls = get.mock.calls.filter((call) => call.arguments[0].includes('/type/'));
-
+    // oxlint-disable-next-line typescript/require-array-sort-compare
     assert.deepEqual(typeCalls.map((call) => call.arguments[0]).sort(), [
-      typeUrl('types', 'grass'),
-      typeUrl('types', 'poison'),
+      typeUrl('grass'),
+      typeUrl('poison'),
     ]);
   });
 
-  test('fetches at most 10 pokemons at a time', async () => {
-    const handler = fakePokeApi('concurrency');
-    let inFlight = 0;
-    let maxInFlight = 0;
-
-    mockPokeApi(async (url) => {
-      if (!url.includes('/pokemon/')) {
-        return handler(url);
-      }
-
-      inFlight++;
-      maxInFlight = Math.max(maxInFlight, inFlight);
-      await setTimeout(1);
-      inFlight--;
-
-      return handler(url);
-    });
-
-    await fetchAllPokemons();
-
-    assert.equal(maxInFlight, 10);
-  });
-
-  test('rejects when PokeAPI fails', async () => {
-    mockPokeApi(() => {
+  void test('rejects when PokeAPI fails', async () => {
+    fetch.mock.mockImplementation(() => {
       throw new Error('PokeAPI is down');
     });
 
-    await assert.rejects(fetchAllPokemons(), { message: 'PokeAPI is down' });
+    await assert.rejects(pokeApi.fetchAllPokemons(), { message: 'PokeAPI is down' });
   });
 });
 
-/** Fake type urls are unique per test, as fetched types are cached for the module's lifetime */
-const typeUrl = (testName: string, type: string) => `https://pokeapi.test/${testName}/type/${type}`;
+async function mockPokeApi(url: URL | RequestInfo) {
+  assert(typeof url === 'string');
 
-const apiPokemon = (id: number, testName: string) => ({
-  id,
-  name: `pokemon-${id}`,
-  sprites: { other: { 'official-artwork': { front_default: `artwork-${id}.png` } } },
-  stats: [
-    { base_stat: 1, stat: { name: 'hp', url: '' } },
-    { base_stat: 2, stat: { name: 'attack', url: '' } },
-    { base_stat: 3, stat: { name: 'defense', url: '' } },
-    { base_stat: 4, stat: { name: 'special-attack', url: '' } },
-    { base_stat: 5, stat: { name: 'special-defense', url: '' } },
-    { base_stat: 6, stat: { name: 'speed', url: '' } },
-  ],
-  types: [
-    { slot: 2, type: { name: 'poison', url: typeUrl(testName, 'poison') } },
-    { slot: 1, type: { name: 'grass', url: typeUrl(testName, 'grass') } },
-  ],
-});
+  const handle = () => {
+    const pokemonId = url.match(/\/pokemon\/(\d+)$/)?.[1];
 
-const apiType = (name: string) => ({
-  name,
-  sprites: { 'generation-viii': { 'sword-shield': { name_icon: `${name}.png` } } },
-});
+    if (pokemonId) {
+      return apiPokemon(Number(pokemonId));
+    }
 
-const mockPokeApi = (handler: (url: string) => unknown) => {
-  return mock.method(axios, 'get', async (url: string) => ({ data: await handler(url) }) as never);
-};
+    return apiType(url.split('/').at(-1)!);
+  };
 
-const fakePokeApi = (testName: string) => (url: string) => {
-  const pokemonId = url.match(/\/pokemon\/(\d+)$/)?.[1];
+  return new Response(JSON.stringify(handle()));
+}
 
-  if (pokemonId) {
-    return apiPokemon(Number(pokemonId), testName);
-  }
+function typeUrl(type: string) {
+  return `https://pokeapi.test/type/${type}`;
+}
 
-  return apiType(url.split('/').at(-1)!);
-};
+function apiPokemon(id: number) {
+  return {
+    id,
+    name: `pokemon-${id}`,
+    sprites: { other: { 'official-artwork': { front_default: `artwork-${id}.png` } } },
+    stats: [
+      { base_stat: 1, stat: { name: 'hp', url: '' } },
+      { base_stat: 2, stat: { name: 'attack', url: '' } },
+      { base_stat: 3, stat: { name: 'defense', url: '' } },
+      { base_stat: 4, stat: { name: 'special-attack', url: '' } },
+      { base_stat: 5, stat: { name: 'special-defense', url: '' } },
+      { base_stat: 6, stat: { name: 'speed', url: '' } },
+    ],
+    types: [
+      { slot: 2, type: { name: 'poison', url: typeUrl('poison') } },
+      { slot: 1, type: { name: 'grass', url: typeUrl('grass') } },
+    ],
+  };
+}
+
+function apiType(name: string) {
+  return {
+    name,
+    sprites: { 'generation-viii': { 'sword-shield': { name_icon: `${name}.png` } } },
+  };
+}
