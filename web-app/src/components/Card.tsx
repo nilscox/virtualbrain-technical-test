@@ -1,87 +1,106 @@
-import { memo, useState } from 'react';
-import type { Pokemon } from 'shared';
+import clsx from 'clsx';
+import { IoMdCheckmark } from 'react-icons/io';
+import type { Pokemon, StatBlock } from 'shared';
 
-type CardProps = {
+import { typeStyle } from '../typeColors';
+import { TypeBadge } from './TypeBadge';
+
+/** Highest base stat of all pokemons, the stat bars are scaled to it */
+const MAX_STAT = 255;
+
+const STATS: { key: keyof StatBlock; label: string }[] = [
+  { key: 'HP', label: 'HP' },
+  { key: 'attack', label: 'Atk' },
+  { key: 'defense', label: 'Def' },
+  { key: 'speed', label: 'Spd' },
+];
+
+/** Background tinted with the pokemon's type color */
+const TINTED = 'bg-[color-mix(in_oklab,var(--type)_32%,var(--surface))]';
+
+type PortraitProps = {
   pokemon: Pokemon;
+  className?: string;
 };
 
-export function MiniCard({ pokemon }: CardProps) {
+/**
+ * The pokemon's artwork in a circle tinted with its type color
+ */
+export function Portrait({ pokemon, className }: PortraitProps) {
   return (
-    <div className="flex h-10 items-center rounded-2xl bg-amber-300 p-2 text-black">
-      <img src={pokemon.image} alt={pokemon.name} style={{ height: '100%' }} />
-      <div className="ml-2 text-center">{pokemon.name}</div>
-    </div>
+    <span
+      style={typeStyle(pokemon.apiTypes[0]?.name ?? '')}
+      className={clsx('block shrink-0 overflow-hidden rounded-full', TINTED, className)}
+    >
+      <img src={pokemon.image} alt="" className="size-full object-contain p-[8%]" />
+    </span>
   );
 }
 
-type SelectableCardProps = CardProps & {
+type CardProps = {
+  pokemon: Pokemon;
   selected: boolean;
   disabled: boolean;
   onToggle: (pokemon: Pokemon) => void;
 };
 
-export const Card = memo(function Card({ pokemon, selected, disabled, onToggle }: SelectableCardProps) {
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-
-  const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const card = e.currentTarget;
-    const box = card.getBoundingClientRect();
-    const x = e.clientX - box.left;
-    const y = e.clientY - box.top;
-    const centerX = box.width / 2;
-    const centerY = box.height / 2;
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
-
-    setRotate({ x: rotateX, y: rotateY });
-  };
-
-  const onMouseLeave = () => {
-    setRotate({ x: 0, y: 0 });
-  };
-
+export function Card({ pokemon, selected, disabled, onToggle }: CardProps) {
   return (
     <button
       type="button"
+      aria-label={pokemon.name}
       aria-pressed={selected}
       aria-disabled={disabled}
+      title={disabled ? 'Your team is full' : undefined}
       onClick={() => onToggle(pokemon)}
-      className={`w-62 rounded-2xl bg-linear-to-r from-amber-300 via-amber-100 to-amber-300 p-1 text-left text-black shadow-md outline-orange-400 not-aria-pressed:hover:outline-dashed focus-visible:outline-dashed aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-pressed:outline-4 aria-pressed:outline-solid`}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{
-        transform: `perspective(1000px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) scale3d(1, 1, 1)`,
-        transition: 'all 400ms cubic-bezier(0.03, 0.98, 0.52, 0.99) 0s',
-      }}
+      style={typeStyle(pokemon.apiTypes[0]?.name ?? '')}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface text-left transition-[translate,box-shadow,opacity] not-aria-disabled:hover:-translate-y-0.5 not-aria-disabled:hover:shadow-lg aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-pressed:border-dex aria-pressed:ring-3 aria-pressed:ring-dex motion-reduce:transition-none"
     >
-      <div className={`rounded-2xl bg-linear-to-br from-black/10 via-white/70 to-black/10`}>
-        <div className="flex-col rounded-2xl p-4">
-          <div className="flex justify-between gap-3">
-            <div className="font-bold">{pokemon.name}</div>
-            <div>HP: {pokemon.stats.HP}</div>
+      <div className={clsx('relative', TINTED)}>
+        <span className="absolute top-2.5 left-3 font-display text-sm font-semibold text-ink/60">
+          #{String(pokemon.id).padStart(3, '0')}
+        </span>
+        <span
+          aria-hidden
+          className="absolute top-2 right-2 hidden size-7 items-center justify-center rounded-full bg-dex text-lg text-white group-aria-pressed:flex"
+        >
+          <IoMdCheckmark />
+        </span>
+        <img
+          className="aspect-square w-full object-contain p-5"
+          src={pokemon.image}
+          alt=""
+          width={475}
+          height={475}
+          loading="lazy"
+        />
+      </div>
+
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="flex flex-col gap-1.5">
+          <h2 className="font-display text-lg leading-tight font-bold capitalize">{pokemon.name}</h2>
+          <div className="flex flex-wrap gap-1">
             {pokemon.apiTypes.map((type) => (
-              <img
-                key={type.name}
-                className="self-end"
-                src={type.image}
-                alt={type.name}
-                style={{ width: '20px' }}
-              />
+              <TypeBadge key={type.name} type={type.name} />
             ))}
           </div>
-          <img
-            className="my-3 bg-white outline-2 dark:bg-blue-950"
-            src={pokemon.image}
-            alt={pokemon.name}
-            width={475}
-            height={475}
-            loading="lazy"
-          />
-          <div>Attack: {pokemon.stats.attack}</div>
-          <div>Defense: {pokemon.stats.defense}</div>
-          <div>Speed: {pokemon.stats.speed}</div>
         </div>
+
+        <dl className="grid grid-cols-[auto_1fr_2rem] items-center gap-x-2.5 gap-y-1 text-xs">
+          {STATS.map(({ key, label }) => (
+            <div key={key} className="contents">
+              <dt className="font-medium text-muted">{label}</dt>
+              <dd className="h-1.5 overflow-hidden rounded-full bg-track" aria-hidden>
+                <div
+                  className="h-full rounded-full bg-type"
+                  style={{ width: `${(pokemon.stats[key] / MAX_STAT) * 100}%` }}
+                />
+              </dd>
+              <dd className="text-right font-semibold tabular-nums">{pokemon.stats[key]}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </button>
   );
-});
+}

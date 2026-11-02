@@ -3,16 +3,57 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-  /* Tailwind 3 font stack, Tailwind 4 prefers Roboto over the system font */
-  --font-sans:
-    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+:root {
+  --ground: #e9ecf1;
+  --surface: #ffffff;
+  --ink: #1b1f2b;
+  --muted: #5d6475;
+  --line: #d3d8e1;
+  --track: #e6e9ef;
+  --dex: #d7263d;
+  --dex-deep: #a51a2d;
+  --lens: #2f8fd8;
+}
+
+.dark {
+  --ground: #121620;
+  --surface: #1c2230;
+  --ink: #e9ebf1;
+  --muted: #9ba3b5;
+  --line: #2e3647;
+  --track: #2a3141;
+  --dex: #c2203a;
+  --dex-deep: #8c1528;
+  --lens: #3d9be3;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Chakra Petch', ui-sans-serif, system-ui, sans-serif;
+
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-track: var(--track);
+  --color-dex: var(--dex);
+  --color-dex-deep: var(--dex-deep);
+  --color-lens: var(--lens);
+
+  /* Set per element by typeStyle() */
+  --color-type: var(--type);
+  --color-type-ink: var(--type-ink);
 }
 
 @layer base {
   body {
-    @apply text-slate-700 dark:text-white;
+    @apply bg-ground font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-lens;
   }
 
   /* Tailwind 4 no longer sets a pointer cursor on buttons */

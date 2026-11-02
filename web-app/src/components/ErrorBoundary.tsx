@@ -24,15 +24,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     }
 
     return (
-      <div
-        role="alert"
-        className="flex h-screen flex-col items-center justify-center gap-4 bg-amber-50 text-center dark:bg-slate-800"
-      >
-        <p className="text-lg">Something went wrong.</p>
+      <div role="alert" className="flex h-screen flex-col items-center justify-center gap-4 px-4 text-center">
+        <p className="font-display text-xl font-semibold">Something went wrong</p>
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="rounded-2xl bg-amber-300 px-4 py-2 font-bold text-black shadow-md outline-orange-400 hover:bg-amber-400 focus-visible:outline-dashed"
+          className="rounded-full bg-dex px-5 py-2 font-semibold text-white hover:bg-dex-deep"
         >
           Reload the page
         </button>

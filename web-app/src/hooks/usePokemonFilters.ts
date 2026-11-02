@@ -33,5 +33,7 @@ export function usePokemonFilters(pokemons: Pokemon[]) {
     );
   };
 
-  return { types, search, setSearch, selectedTypes, toggleType, filteredPokemons };
+  const clearTypes = () => setSelectedTypes([]);
+
+  return { types, search, setSearch, selectedTypes, toggleType, clearTypes, filteredPokemons };
 }

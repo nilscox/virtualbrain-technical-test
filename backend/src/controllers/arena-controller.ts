@@ -1,7 +1,7 @@
 import { pipeline } from 'stream/promises';
 
 import { type Request, type Response, Router } from 'express';
-import { MAX_BATTLE_POKEMONS, type Pokemon } from 'shared';
+import { MAX_BATTLE_POKEMONS, MIN_BATTLE_POKEMONS, type Pokemon } from 'shared';
 import { z } from 'zod';
 
 import type { PokemonDatabase } from '../services/pokemon-database.ts';
@@ -23,7 +23,7 @@ export class ArenaController {
   private static battleBodySchema = z.object({
     pokemonIds: z
       .array(z.int().positive())
-      .min(2, 'A battle needs at least two pokemons')
+      .min(MIN_BATTLE_POKEMONS, `A battle needs at least ${MIN_BATTLE_POKEMONS} pokemons`)
       .max(MAX_BATTLE_POKEMONS, `A battle allows at most ${MAX_BATTLE_POKEMONS} pokemons`)
       .refine((ids) => new Set(ids).size === ids.length, 'A pokemon cannot fight itself'),
   });
@@ -32,7 +32,7 @@ export class ArenaController {
    * Simulate a battle between pokemons, the result is streamed as plain text
    * @route POST /arena/battles
    * @group Arena
-   * @param {number[]} pokemonIds.body.required - IDs of the pokemons fighting, at least two
+   * @param {number[]} pokemonIds.body.required - IDs of the pokemons fighting
    */
   private battles = async (req: Request, res: Response) => {
     const { pokemonIds } = ArenaController.battleBodySchema.parse(req.body);
