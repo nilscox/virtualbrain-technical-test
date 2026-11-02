@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
     "build": "pnpm --recursive build",
+    "typecheck": "tsc -b",
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",

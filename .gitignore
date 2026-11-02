@@ -9,6 +9,9 @@ tmp
 # dependencies
 node_modules
 
+# Typescript
+*.tsbuildinfo
+
 # IDEs and editors
 /.idea
 .project
